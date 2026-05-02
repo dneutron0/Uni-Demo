@@ -1,0 +1,51 @@
+# Build output
+build/
+out/
+.qt/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+*.a
+*.so
+*.dll
+*.dylib
+*.exe
+*.apk
+*.aab
+
+# Qt Creator / IDE state
+*.user
+*.user.*
+*.autosave
+*.qmlc
+*.jsc
+
+# Android local/generated files
+android/.gradle/
+android/local.properties
+android/app/build/
+local.properties
+
+# Private backend configs and credentials
+google-services.json
+GoogleService-Info.plist
+*.keystore
+*.jks
+*.p12
+*.pem
+*.key
+.env
+.env.*
+
+# Vendored SDKs and local binaries
+libs/
+openssl/
+DemoMedia/
+*.mp4
+*.mov
+*.m4v
+
+# OS noise
+.DS_Store
+Thumbs.db
