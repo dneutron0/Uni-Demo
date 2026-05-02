@@ -1,8 +1,8 @@
 # Uni Demo
 
-Uni Demo is a sanitized, portfolio-ready Qt/QML mobile app that showcases a campus media experience without exposing private backend code, Firebase configuration, product strategy, or local development paths.
+Uni Demo is a sanitized, portfolio-ready Qt/QML mobile app that showcases the shape of Uni without exposing private backend code, Firebase configuration, product strategy, user records, or local development paths.
 
-This repository is intentionally built as a clean demo, not as a copy of the production app.
+This repository is intentionally built as a clean demo, not as a copy of the production app. It mirrors the public-facing structure of Uni: Media, Learn, Compose, Discover, and Profile.
 
 ## Tech Stack
 
@@ -16,10 +16,11 @@ This repository is intentionally built as a clean demo, not as a copy of the pro
 ## Features Demonstrated
 
 - Mock sign-in and sign-out flow
-- Feed powered by a C++ `QAbstractListModel`
+- Media feed powered by a C++ `QAbstractListModel`
 - Mixed feed delegates for video-style, photo-style, and text posts
 - Like and bookmark mutations from QML into C++
 - Compose screen with simulated upload progress
+- Learn and Discover surfaces that reflect Uni's core navigation
 - Profile screen with local mock profile data
 - Portable CMake setup without hardcoded SDK or user paths
 
@@ -31,7 +32,7 @@ This repository is intentionally built as a clean demo, not as a copy of the pro
 - Generated build folders and Qt Creator user files
 - Vendored SDK binaries
 - Local machine paths
-- Incomplete course, creator, education, and messaging depth
+- Private course, creator, education, and messaging depth
 - Large local demo videos
 
 ## Why Mock Services

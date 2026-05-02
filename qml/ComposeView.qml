@@ -5,6 +5,7 @@ import UniDemo 1.0
 
 Item {
     id: root
+    signal closeRequested()
 
     Rectangle {
         anchors.fill: parent
@@ -18,7 +19,7 @@ Item {
 
         SectionHeader {
             title: "Compose"
-            subtitle: "Fake upload flow driven by a C++ service and QTimer progress."
+            subtitle: "Create a media, photo, or text upload through the same mock C++ service."
         }
 
         Rectangle {
@@ -68,9 +69,14 @@ Item {
                     }
 
                     Button {
-                        text: "Cancel"
-                        enabled: UploadService.uploading
-                        onClicked: UploadService.cancel()
+                        text: UploadService.uploading ? "Cancel" : "Close"
+                        onClicked: {
+                            if (UploadService.uploading) {
+                                UploadService.cancel()
+                            } else {
+                                root.closeRequested()
+                            }
+                        }
                     }
                 }
             }
@@ -96,7 +102,7 @@ Item {
             MediaFeedModel.addMockPost(title, body)
             titleField.text = ""
             bodyField.text = ""
-            statusLabel.text = "Mock upload complete. The new post was inserted at the top of the feed."
+            statusLabel.text = "Upload complete. The new post was inserted at the top of Media."
         }
     }
 }

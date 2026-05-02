@@ -27,7 +27,7 @@ Item {
                 Layout.leftMargin: 18
                 Layout.rightMargin: 18
                 title: "Profile"
-                subtitle: "Local profile data with no account or backend dependency."
+                subtitle: "Sanitized profile state for posts, saved media, and learning identity."
             }
 
             Rectangle {
@@ -127,7 +127,7 @@ Item {
                     spacing: 8
 
                     Label {
-                        text: "Demo privacy posture"
+                        text: "Portfolio-safe boundary"
                         color: "#164e63"
                         font.pixelSize: 17
                         font.weight: Font.DemiBold
@@ -135,7 +135,7 @@ Item {
 
                     Label {
                         width: parent.width
-                        text: "This screen intentionally avoids real account data, private messaging, and backend identifiers."
+                        text: "This demo avoids real account records, private messages, backend identifiers, and Firebase configuration."
                         wrapMode: Text.WordWrap
                         color: "#155e75"
                         font.pixelSize: 14

@@ -5,6 +5,8 @@
         <file alias="campus-photo.svg">assets/campus-photo.svg</file>
         <file alias="comment-icon.svg">assets/comment-icon.svg</file>
         <file alias="compose-icon.svg">assets/compose-icon.svg</file>
+        <file alias="education-icon.svg">assets/education-icon.svg</file>
+        <file alias="explore-icon.svg">assets/explore-icon.svg</file>
         <file alias="heart-icon.svg">assets/heart-icon.svg</file>
         <file alias="image-icon.svg">assets/image-icon.svg</file>
         <file alias="media-icon.svg">assets/media-icon.svg</file>

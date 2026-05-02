@@ -26,7 +26,9 @@ qt_add_qml_module(appUniDemo
         qml/AppShell.qml
         qml/AuthView.qml
         qml/ComposeView.qml
+        qml/DiscoverView.qml
         qml/FeedView.qml
+        qml/LearnView.qml
         qml/ProfileView.qml
         qml/components/InteractionBar.qml
         qml/components/MediaCard.qml

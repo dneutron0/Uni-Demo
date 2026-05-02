@@ -39,7 +39,7 @@ Item {
                     }
 
                     Label {
-                        text: "Mock feed data from a C++ QAbstractListModel"
+                        text: "Posts, photos, and media backed by a C++ list model"
                         color: "#6b7280"
                         font.pixelSize: 13
                     }

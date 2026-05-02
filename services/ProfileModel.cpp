@@ -7,25 +7,25 @@ ProfileModel::ProfileModel(QObject *parent)
 
 QString ProfileModel::campus() const
 {
-    return "North Campus";
+    return "Creator profile";
 }
 
 QString ProfileModel::major() const
 {
-    return "Computer Science";
+    return "Computer Science path";
 }
 
 int ProfileModel::posts() const
 {
-    return 24;
+    return 18;
 }
 
 int ProfileModel::followers() const
 {
-    return 418;
+    return 214;
 }
 
 int ProfileModel::saved() const
 {
-    return 37;
+    return 42;
 }

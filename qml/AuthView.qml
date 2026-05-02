@@ -34,7 +34,7 @@ Item {
                 }
 
                 Label {
-                    text: "A mock campus media experience built with Qt, QML, and C++."
+                    text: "A sanitized Qt/QML demo of Uni's media, learning, discovery, and profile surfaces."
                     width: parent.width
                     wrapMode: Text.WordWrap
                     color: "#4b5563"
@@ -56,7 +56,7 @@ Item {
                 spacing: 12
 
                 Label {
-                    text: "Demo sign in"
+                    text: "Demo session"
                     font.pixelSize: 20
                     font.weight: Font.DemiBold
                     color: "#111827"
@@ -110,7 +110,7 @@ Item {
             Label {
                 anchors.fill: parent
                 anchors.margins: 14
-                text: "Firebase and private backend calls were replaced with local mock services for this portfolio build."
+                text: "Private Firebase calls, account data, messages, and local SDK paths are replaced with local mock services."
                 wrapMode: Text.WordWrap
                 verticalAlignment: Text.AlignVCenter
                 color: "#3730a3"
