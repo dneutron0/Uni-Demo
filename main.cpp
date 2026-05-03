@@ -1,27 +1,47 @@
-#include <QGuiApplication>
 #include <QCoreApplication>
+#include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include <QVariant>
 
-#include "services/MediaFeedModel.h"
-#include "services/MockAuthService.h"
-#include "services/MockUploadService.h"
-#include "services/ProfileModel.h"
+#include "AuthenticationServices/AuthManager.h"
+#include "MediaServices/GalleryManager.h"
+#include "MediaServices/MediaFeedModel.h"
+#include "MediaServices/Upload.h"
+#include "MediaServices/UploadManager.h"
+#include "MediaServices/UtilityManager.h"
+#include "MessageServices/ConversationManager.h"
+#include "UserServices/User.h"
+#include "UserServices/UserManager.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    MediaFeedModel mediaFeedModel;
-    MockAuthService authService;
-    MockUploadService uploadService;
-    ProfileModel profileModel;
+    UtilityManager utilityManager;
+    UserManager userManager;
+    GalleryManager galleryManager;
+    ConversationManager conversationManager;
 
-    qmlRegisterSingletonInstance("UniDemo", 1, 0, "MediaFeedModel", &mediaFeedModel);
-    qmlRegisterSingletonInstance("UniDemo", 1, 0, "AuthService", &authService);
-    qmlRegisterSingletonInstance("UniDemo", 1, 0, "UploadService", &uploadService);
-    qmlRegisterSingletonInstance("UniDemo", 1, 0, "ProfileModel", &profileModel);
+    AuthManager::instance().setUserManager(&userManager);
 
     QQmlApplicationEngine engine;
+
+    qmlRegisterType<User>("Uni", 1, 0, "User");
+    qmlRegisterType<Upload>("Uni", 1, 0, "Upload");
+    qmlRegisterType<MediaFeedModel>("Uni", 1, 0, "MediaFeedModel");
+
+    qmlRegisterSingletonInstance("Uni", 1, 0, "AuthManager", &AuthManager::instance());
+    qmlRegisterSingletonInstance("Uni", 1, 0, "UploadManager", &UploadManager::instance());
+    qmlRegisterSingletonInstance("Uni", 1, 0, "UserManager", &userManager);
+
+    app.setProperty("galleryManager", QVariant::fromValue(static_cast<QObject *>(&galleryManager)));
+
+    utilityManager.setObjectName("utilityManager");
+    engine.rootContext()->setContextProperty("utilityManager", &utilityManager);
+    engine.rootContext()->setContextProperty("GalleryManager", &galleryManager);
+    engine.rootContext()->setContextProperty("ConversationManager", &conversationManager);
+
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,
@@ -29,7 +49,7 @@ int main(int argc, char *argv[])
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
 
-    engine.loadFromModule("UniDemo", "Main");
+    engine.loadFromModule("Uni", "Main");
 
     return app.exec();
 }

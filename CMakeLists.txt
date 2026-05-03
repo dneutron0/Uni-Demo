@@ -4,8 +4,10 @@ project(UniDemo VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick Multimedia)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick Multimedia)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -13,46 +15,60 @@ if(COMMAND qt_policy)
     qt_policy(SET QTP0004 NEW)
 endif()
 
+file(GLOB_RECURSE QML_FILES
+    RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+    CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/Auth/*.qml"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Core/*.qml"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Shared/*.qml"
+)
+
+list(APPEND QML_FILES Main.qml)
+
 qt_add_executable(appUniDemo
     main.cpp
 )
 
 qt_add_qml_module(appUniDemo
-    URI UniDemo
+    URI Uni
     VERSION 1.0
 
     QML_FILES
-        Main.qml
-        qml/AppShell.qml
-        qml/AuthView.qml
-        qml/ComposeView.qml
-        qml/DiscoverView.qml
-        qml/FeedView.qml
-        qml/LearnView.qml
-        qml/ProfileView.qml
-        qml/components/InteractionBar.qml
-        qml/components/MediaCard.qml
-        qml/components/PhotoCard.qml
-        qml/components/PostCard.qml
-        qml/components/SectionHeader.qml
-        qml/components/StatPill.qml
+        ${QML_FILES}
 
     RESOURCES
-        resources.qrc
+        images.qrc
 
     SOURCES
-        services/MediaFeedModel.h
-        services/MediaFeedModel.cpp
-        services/MockAuthService.h
-        services/MockAuthService.cpp
-        services/MockUploadService.h
-        services/MockUploadService.cpp
-        services/ProfileModel.h
-        services/ProfileModel.cpp
+        AuthenticationServices/AuthManager.h
+        AuthenticationServices/AuthManager.cpp
+        AuthenticationServices/MockAuthService.h
+        AuthenticationServices/MockAuthService.cpp
+        MediaServices/GalleryManager.h
+        MediaServices/GalleryManager.cpp
+        MediaServices/MediaFeedModel.h
+        MediaServices/MediaFeedModel.cpp
+        MediaServices/MockUploadService.h
+        MediaServices/MockUploadService.cpp
+        MediaServices/Upload.h
+        MediaServices/Upload.cpp
+        MediaServices/UploadManager.h
+        MediaServices/UploadManager.cpp
+        MediaServices/UtilityManager.h
+        MediaServices/UtilityManager.cpp
+        MessageServices/ConversationManager.h
+        MessageServices/ConversationManager.cpp
+        UserServices/ProfileModel.h
+        UserServices/ProfileModel.cpp
+        UserServices/User.h
+        UserServices/User.cpp
+        UserServices/UserManager.h
+        UserServices/UserManager.cpp
 )
 
 target_link_libraries(appUniDemo
     PRIVATE
+        Qt6::Core
         Qt6::Quick
         Qt6::Multimedia
 )
@@ -61,6 +77,12 @@ set_target_properties(appUniDemo PROPERTIES
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
+
+if(ANDROID)
+    set_property(TARGET appUniDemo PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/android")
+endif()
+
+qt6_import_qml_plugins(appUniDemo)
 
 include(GNUInstallDirs)
 install(TARGETS appUniDemo
