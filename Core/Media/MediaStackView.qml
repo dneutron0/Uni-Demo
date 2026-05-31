@@ -247,7 +247,16 @@ StackView {
                             onOpenMediaPlayerRequested: {
                                 mediaStackView.push(
                                             Qt.createComponent("qrc:/qt/qml/Uni/Shared/MediaPlayerView.qml"),
-                                            { stackView: mediaStackView }
+                                            {
+                                                stackView: mediaStackView,
+                                                mediaUrl: model.mediaUrl,
+                                                username: model.username,
+                                                displayName: model.displayName,
+                                                caption: model.caption,
+                                                timestamp: model.timestamp,
+                                                likeCount: model.likeCount,
+                                                commentCount: model.commentCount
+                                            }
                                             )
                             }
                         }
@@ -275,8 +284,23 @@ StackView {
                             onOpenThreadRequested: {
                                 mediaStackView.push(
                                             Qt.createComponent("qrc:/qt/qml/Uni/Shared/PhotoThreadView.qml"),
-                                            { stackView: mediaStackView }
+                                            {
+                                                stackView: mediaStackView,
+                                                mediaUrl: model.mediaUrl,
+                                                username: model.username,
+                                                displayName: model.displayName,
+                                                caption: model.caption,
+                                                timestamp: model.timestamp,
+                                                likeCount: model.likeCount,
+                                                commentCount: model.commentCount
+                                            }
                                             )}
+                            onOpenProfileRequested: {
+                                mediaStackView.push(
+                                            Qt.createComponent("qrc:/qt/qml/Uni/Shared/ProfilePreview.qml"),
+                                            { stackView: mediaStackView }
+                                            )
+                            }
                         }
                     }
                 }

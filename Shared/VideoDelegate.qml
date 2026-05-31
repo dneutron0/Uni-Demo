@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls
 import QtMultimedia
+import Qt5Compat.GraphicalEffects
 
 Rectangle {
     id: videoDelegate
@@ -134,6 +135,15 @@ Rectangle {
                     id: videoOutput
                     anchors.fill: parent
                     fillMode: VideoOutput.PreserveAspectCrop
+                    visible: mediaUrl.indexOf(".mp4") !== -1 || mediaUrl.indexOf(".mov") !== -1 || mediaUrl.indexOf("video") !== -1
+                }
+
+                Image {
+                    anchors.fill: parent
+                    source: videoOutput.visible ? "" : mediaUrl
+                    fillMode: Image.PreserveAspectCrop
+                    asynchronous: true
+                    visible: !videoOutput.visible && mediaUrl.length > 0
                 }
 
 
@@ -186,7 +196,7 @@ Rectangle {
 
 
                 Button {
-                    text: "0"
+                    text: commentCount
                     width: parent.width*.2
                     height: parent.height
                     background: null
@@ -202,7 +212,7 @@ Rectangle {
                         }
 
                         Text {
-                            text: "0"
+                            text: commentCount
                             anchors.verticalCenter: commentButtonIcon.verticalCenter
                             font.pixelSize: 15
                             font.weight: 500
@@ -304,7 +314,7 @@ Rectangle {
             id: mediaPlayerView
 
             MediaPlayerView {
-
+                mediaUrl: videoDelegate.mediaUrl
             }
         }
 

@@ -1,27 +1,90 @@
 import QtQuick 2.15
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
+import QtMultimedia
 
-Column {
+Item {
+    id: mediaPlayerView
     property StackView stackView
-    width: stackView.width
-    height: childrenRect.height
+    property string mediaUrl: ""
+    property string username: "@jordan"
+    property string displayName: "Jordan Lee"
+    property string caption: "Quick clip from the robotics showcase."
+    property string timestamp: "18h"
+    property int likeCount: 41
+    property int commentCount: 9
+
+    width: stackView ? stackView.width : mainLayout.width
+    height: mainLayout.height
+
+    ListModel {
+        id: commentModel
+
+        ListElement { author: "@maya"; body: "That arm movement is much smoother than the last prototype."; timestamp: "7m" }
+        ListElement { author: "@sam"; body: "Can you share the build notes after the showcase?"; timestamp: "21m" }
+        ListElement { author: "@noor"; body: "The final demo was worth staying late for."; timestamp: "38m" }
+    }
+
+    ListModel {
+        id: relatedModel
+
+        ListElement { title: "Inside the robotics lab"; creator: "@jordan"; summary: "A quick walkthrough of the team's workspace."; accent: "#6d5dfc" }
+        ListElement { title: "Prototype testing notes"; creator: "@maya"; summary: "Three lessons from this week's iteration."; accent: "#2979ff" }
+        ListElement { title: "Showcase recap"; creator: "@sam"; summary: "Highlights from the engineering floor."; accent: "#00a884" }
+    }
 
     Rectangle {
-        id: mediaPlayerView
-        width: mainLayout.width
-        height: mainLayout.height*.365
-        color: "black"
-        z: 1
+        id: mediaFrame
+        width: parent.width
+        height: parent.height * .365
+        anchors.top: parent.top
+        color: "#050607"
         clip: true
+
+        MediaPlayer {
+            id: videoPlayer
+            source: mediaPlayerView.mediaUrl
+            videoOutput: videoOutput
+            audioOutput: AudioOutput {}
+            autoPlay: videoOutput.visible && mediaPlayerView.mediaUrl.length > 0
+        }
+
+        VideoOutput {
+            id: videoOutput
+            anchors.fill: parent
+            fillMode: VideoOutput.PreserveAspectCrop
+            visible: mediaPlayerView.mediaUrl.indexOf(".mp4") !== -1
+                     || mediaPlayerView.mediaUrl.indexOf(".mov") !== -1
+                     || mediaPlayerView.mediaUrl.indexOf("video") !== -1
+        }
+
+        Image {
+            anchors.fill: parent
+            source: videoOutput.visible ? "" : mediaPlayerView.mediaUrl
+            fillMode: Image.PreserveAspectCrop
+            asynchronous: true
+            visible: !videoOutput.visible && mediaPlayerView.mediaUrl.length > 0
+        }
+
+        RoundButton {
+            width: 44
+            height: width
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.margins: 8
+            icon.source: "qrc:/images/Resources/back-icon.svg"
+            background: Rectangle {
+                radius: width * .5
+                color: "#d9ffffff"
+            }
+            onClicked: stackView.pop()
+        }
 
         MouseArea {
             anchors.fill: parent
-            drag.target: null
+            z: -1
             property real startX
 
             onPressed: startX = mouseX
-
             onReleased: {
                 if (mouseX - startX > 100) {
                     stackView.pop()
@@ -30,168 +93,159 @@ Column {
         }
     }
 
-    ListView {
-        id: mediaPlayerList
-        width: mainLayout.width
-        height: mainLayout.height - mediaPlayerView.height
-        contentHeight: childrenRect.height
-        model: 20
-        spacing: 1
-        header: Rectangle {
-            width: mainLayout.width
-            height: mainLayout.height * .3
-            color: "slategray"
+    Rectangle {
+        id: mediaInfoPanel
+        width: parent.width
+        height: parent.height * .17
+        anchors.top: mediaFrame.bottom
+        color: "#f5f6f8"
+
+        Column {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.margins: 12
+            spacing: 6
 
             Label {
-                id: titleLabel
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.margins: 10
-                text: "This is the title of the video"
-                font.pixelSize: 20
-                font.weight: 650
-            }
-
-            Row {
-                id: uploadMetricFrame
-                anchors.top: titleLabel.bottom
-                anchors.left: parent.left
-                anchors.topMargin: 5
-                anchors.leftMargin: 10
-                spacing: 10
-                Label {
-                    text: "@Username"
-                    font.weight: 450
-                }
-
-                Label {
-                    text: "0 Views"
-                    font.weight: 450
-
-                }
-
-                Label {
-                    text: "1m ago"
-                    font.weight: 450
-
-                }
-            }
-
-            Row {
-                id: uploadInteractionPanel
-                anchors.top: uploadMetricFrame.bottom
+                text: mediaPlayerView.caption
                 width: parent.width
-                height: parent.height * .25
-                anchors.left: parent.left
-                anchors.topMargin: 7
-                anchors.leftMargin: 5
-
-                Rectangle {
-                    id: uploadUserImage
-                    width: parent.height
-                    height: parent.height
-                    radius: parent.width * .5
-                    color: "black"
-                    visible: false
-
-                    Image {
-                        anchors.fill: parent
-                    }
-
-                }
-
-                OpacityMask {
-                    width: uploadUserImage.width
-                    height: uploadUserImage.height
-                    source: uploadUserImage
-                    maskSource: Rectangle {
-                        width: uploadUserImage.width
-                        height: uploadUserImage.height
-                        radius: uploadUserImage.width * .5
-                        visible: false
-                    }
-                }
+                font.pixelSize: 19
+                font.weight: Font.DemiBold
+                wrapMode: Text.Wrap
+                elide: Text.ElideRight
             }
 
-            Rectangle {
-                id: commentPreviewFrame
-                width: parent.width*.97
-                height: parent.height * .34
-                anchors.top: uploadInteractionPanel.bottom
-                anchors.topMargin: 5
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 5
-                anchors.horizontalCenter: parent.horizontalCenter
-                radius: 5
-                color: "dimgray"
+            Label {
+                text: mediaPlayerView.username + "  " + mediaPlayerView.timestamp
+                color: "#59636e"
+                font.pixelSize: 15
+            }
 
-                Label {
-                    id: commentsTitleLabel
-                    anchors.left: parent.left
-                    anchors.top: parent.top
-                    anchors.margins: 5
-                    text: "Comments"
-                    font.pixelSize: 16
-                    font.weight: 600
-                }
+            Label {
+                text: mediaPlayerView.likeCount + " likes  |  " + mediaPlayerView.commentCount + " comments"
+                color: "#39424e"
+                font.pixelSize: 15
+            }
+        }
+    }
 
+    TabBar {
+        id: detailTabs
+        width: parent.width
+        height: parent.height * .065
+        anchors.top: mediaInfoPanel.bottom
 
-                Rectangle {
-                    width: (parent.height - commentsTitleLabel.height) * .6
-                    height: width
-                    radius: width * .5
-                    color: "black"
-                    anchors.top: commentsTitleLabel.bottom
-                    anchors.left: parent.left
-                    anchors.leftMargin: 5
-                    anchors.topMargin: 10
+        TabButton { text: "Comments" }
+        TabButton { text: "Related" }
+    }
+
+    SwipeView {
+        id: detailSwipeView
+        width: parent.width
+        anchors.top: detailTabs.bottom
+        anchors.bottom: parent.bottom
+        currentIndex: detailTabs.currentIndex
+        clip: true
+
+        onCurrentIndexChanged: detailTabs.currentIndex = currentIndex
+
+        Item {
+            ListView {
+                anchors.fill: parent
+                clip: true
+                model: commentModel
+
+                delegate: Rectangle {
+                    width: ListView.view.width
+                    height: commentBody.implicitHeight + 46
+                    color: index % 2 === 0 ? "white" : "#fafbfc"
+
+                    Rectangle {
+                        id: commentAvatar
+                        width: 34
+                        height: width
+                        radius: width * .5
+                        anchors.left: parent.left
+                        anchors.leftMargin: 12
+                        anchors.top: parent.top
+                        anchors.topMargin: 12
+                        color: index % 2 === 0 ? "#6d5dfc" : "#2979ff"
+                    }
+
+                    Column {
+                        anchors.left: commentAvatar.right
+                        anchors.right: parent.right
+                        anchors.leftMargin: 10
+                        anchors.rightMargin: 12
+                        anchors.top: commentAvatar.top
+                        spacing: 3
+
+                        Label {
+                            text: model.author + "  " + model.timestamp
+                            color: "#39424e"
+                            font.weight: Font.DemiBold
+                        }
+
+                        Label {
+                            id: commentBody
+                            width: parent.width
+                            text: model.body
+                            wrapMode: Text.Wrap
+                        }
+                    }
                 }
             }
         }
 
-        delegate: Rectangle {
-            width: mainLayout.width
-            height: mainLayout.height * .46
-            color: "gray"
+        Item {
+            ListView {
+                anchors.fill: parent
+                clip: true
+                model: relatedModel
 
-            Rectangle {
-                id: uploadThumbnail
-                width: parent.width
-                height: parent.height * .75
-                color: "black"
-                anchors.top: parent.top
-            }
+                delegate: Rectangle {
+                    width: ListView.view.width
+                    height: 104
+                    color: index % 2 === 0 ? "white" : "#fafbfc"
 
-
-            Rectangle {
-                width: parent.width
-                height: parent.height - uploadThumbnail.height
-                anchors.top: uploadThumbnail.bottom
-
-                Rectangle {
-                    id: uploadPreviewUserImage
-                    width: parent.height * .7
-                    height: width
-                    radius: width * .5
-                    color: "black"
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.margins: 5
-
-                    Image {
-                        anchors.fill: parent
+                    Rectangle {
+                        id: relatedThumbnail
+                        width: 112
+                        height: 82
+                        radius: 8
+                        anchors.left: parent.left
+                        anchors.leftMargin: 12
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: model.accent
                     }
-                }
 
-                Label {
-                    id: uploadPreviewTitleLabel
-                    text: "This is the title of the video"
-                    font.pixelSize: 20
-                    font.weight: 650
-                    anchors.top: uploadPreviewUserImage.top
-                    anchors.left: uploadPreviewUserImage.right
+                    Column {
+                        anchors.left: relatedThumbnail.right
+                        anchors.right: parent.right
+                        anchors.leftMargin: 12
+                        anchors.rightMargin: 12
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 4
 
+                        Label {
+                            text: model.title
+                            font.pixelSize: 17
+                            font.weight: Font.DemiBold
+                        }
 
+                        Label {
+                            text: model.creator
+                            color: "#59636e"
+                        }
+
+                        Label {
+                            width: parent.width
+                            text: model.summary
+                            color: "#39424e"
+                            elide: Text.ElideRight
+                        }
+                    }
                 }
             }
         }

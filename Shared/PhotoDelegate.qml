@@ -151,7 +151,7 @@ Column {
             spacing: 5
 
             Button {
-                text: "0"
+                text: likeCount
                 width: parent.width*.2
                 height: parent.height
                 background: null
@@ -167,7 +167,7 @@ Column {
                     }
 
                     Text {
-                        text: "0"
+                        text: likeCount
                         anchors.verticalCenter: likeButtonIcon.verticalCenter
                         font.pixelSize: 15
                         font.weight: 500
@@ -177,7 +177,7 @@ Column {
 
 
             Button {
-                text: "0"
+                text: commentCount
                 width: parent.width*.2
                 height: parent.height
                 background: null
@@ -193,7 +193,7 @@ Column {
                     }
 
                     Text {
-                        text: "0"
+                        text: commentCount
                         anchors.verticalCenter: commentButtonIcon.verticalCenter
                         font.pixelSize: 15
                         font.weight: 500

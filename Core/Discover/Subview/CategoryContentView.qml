@@ -20,7 +20,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             onClicked: discoverStackView.pop();
             background: Image {
-                source: "qrc:/images/Resources/back-Icon.svg"
+                source: "qrc:/images/Resources/back-icon.svg"
             }
         }
     }

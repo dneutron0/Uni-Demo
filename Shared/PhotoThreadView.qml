@@ -3,328 +3,229 @@ import QtQuick.Controls
 import Qt5Compat.GraphicalEffects
 
 Item {
-  property StackView stackView: null
+    id: photoThreadView
+    property StackView stackView: null
+    property string mediaUrl: "qrc:/images/Resources/test-image.jpg"
+    property string username: "@maya"
+    property string displayName: "Maya Chen"
+    property string caption: "Late night study setup in the library."
+    property string timestamp: "22h"
+    property int likeCount: 24
+    property int commentCount: 6
 
-  id: photoThreadView
-  width: mainLayout.width
-  height: mainLayout.height
+    signal openProfileRequested()
 
-  Rectangle {
-    id: photoThreadViewToolbar
-    width: parent.width
-    height: parent.height * .08
+    width: stackView ? stackView.width : mainLayout.width
+    height: mainLayout.height
 
-    RoundButton {
-      width: parent.height
-      height: width
-      radius: 100
-      onClicked: {
-        stackView.pop()
-      }
-      anchors.left: parent.left
-      anchors.top: parent.top
-      z: 1
+    ListModel {
+        id: actionModel
+
+        ListElement { iconSource: "qrc:/images/Resources/heart-icon.svg"; metric: "24" }
+        ListElement { iconSource: "qrc:/images/Resources/comment-icon.svg"; metric: "6" }
+        ListElement { iconSource: "qrc:/images/Resources/repost-icon.svg"; metric: "3" }
+        ListElement { iconSource: "qrc:/images/Resources/share-icon.svg"; metric: "8" }
+        ListElement { iconSource: "qrc:/images/Resources/bookmark-icon.svg"; metric: "12" }
     }
 
-  }
+    ListModel {
+        id: commentModel
 
-  ListView {
-    id: photoThreadListView
-    width: parent.width
-    anchors.top: photoThreadViewToolbar.bottom
-    anchors.bottom: parent.bottom
-    focus: true
-    clip: true
-    spacing: 1
-    model: 3
-    header: Column {
-      width: mainLayout.width
+        ListElement { author: "@jordan"; body: "The library lighting makes this look like a study playlist cover."; timestamp: "18m" }
+        ListElement { author: "@noor"; body: "Saving this setup idea for finals week."; timestamp: "44m" }
+        ListElement { author: "@sam"; body: "The notes in the corner are doing real work."; timestamp: "1h" }
+    }
 
-
-      Rectangle {
-        id: uploadImageFrame
-        width: parent.width*.95
-        height: mainLayout.height * .65
-        radius: 10
-        anchors.horizontalCenter: parent.horizontalCenter
-
-
-        Image {
-          id: uploadImage
-          width: parent.width
-          height: parent.height * .95
-          source: "qrc:/images/Resources/test-image.jpg"
-          visible: false
-          anchors.centerIn: parent
-
-        }
-
-        Rectangle {
-          id: mask
-          anchors.fill: uploadImage
-          radius: 10
-          visible: false
-
-        }
-
-
-        OpacityMask {
-          anchors.fill: uploadImage
-          source: uploadImage
-          maskSource: mask
-
-        }
-
-
-      }
-
-      Rectangle {
-        id: userInfoFrame
+    Rectangle {
+        id: toolbar
         width: parent.width
-        height: mainLayout.height * .1
+        height: parent.height * .075
+        anchors.top: parent.top
+        color: "white"
+        z: 1
 
-        Image {
-          width: parent.height*.5
-          height: parent.height*.5
-          source: "qrc:/images/Resources/ellipsis-icon.svg"
-          anchors.top: parent.top
-          anchors.right: parent.right
-          anchors.rightMargin: 7
-
+        RoundButton {
+            width: parent.height * .9
+            height: width
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            icon.source: "qrc:/images/Resources/back-icon.svg"
+            background: null
+            onClicked: stackView.pop()
         }
 
-        Rectangle {
-          id: uploadCreatorImage
-          width: parent.height*.9
-          height: parent.height*.9
-          radius: 100
-          anchors.top: parent.top
-          anchors.left: parent.left
-          anchors.leftMargin: 10
-          color: "black"
-          MouseArea {
-            anchors.fill: parent
-            onClicked: {
-              openProfileRequested()
-            }
-          }
-        }
-
-        Column {
-          width: parent.width
-          anchors.verticalCenter: uploadCreatorImage.verticalCenter
-          anchors.left: uploadCreatorImage.right
-          anchors.leftMargin: 5
-          spacing: 15
-
-          Label {
-            id: uploadTitleLabel
-            text: "This is the title of the upload"
+        Label {
+            anchors.centerIn: parent
+            text: "Photo"
             font.pixelSize: 18
-            font.weight: 500
-          }
-
-          Row {
-            anchors.leftMargin: 5
-            spacing: 5
-
-            Label {
-              text: "@Username"
-              font.pixelSize: 16
-
-            }
-
-            Label {
-              text: "|"
-              font.pixelSize: 16
-
-            }
-
-
-            Label {
-              text: "22h"
-              font.pixelSize: 16
-
-            }
-          }
-
-
+            font.weight: Font.DemiBold
         }
-
-
-      }
-
-
-      Rectangle {
-        id: interactionPanel
-        width: mainLayout.width
-        height: mainLayout.height*.074
-
-        Row {
-          width: parent.width*.85
-          height: parent.height
-          anchors.horizontalCenter: parent.horizontalCenter
-          anchors.verticalCenter: parent.verticalCenter
-          spacing: 5
-
-          Button {
-            text: "0"
-            width: parent.width*.2
-            height: parent.height
-            icon.width: width * .1
-            icon.height: height * .8
-            background: null
-            contentItem:  Row {
-              spacing: 5
-              anchors.fill: parent
-              Image {
-                id: likeButtonIcon
-                width: parent.width * .5
-                height: parent.height*.7
-                source:  "qrc:/images/Resources/heart-icon.svg"
-                anchors.verticalCenter: parent.verticalCenter
-              }
-
-              Text {
-                text: "0"
-                anchors.verticalCenter: likeButtonIcon.verticalCenter
-                font.pixelSize: 15
-                font.weight: 500
-              }
-            }
-          }
-
-
-          Button {
-            text: "0"
-            width: parent.width*.2
-            height: parent.height
-            icon.width: width * .1
-            icon.height: height * .85
-            background: null
-            contentItem:  Row {
-              spacing: 5
-              anchors.fill: parent
-              Image {
-                id: commentButtonIcon
-                width: parent.width * .5
-                height: parent.height*.7
-                source:  "qrc:/images/Resources/comment-icon.svg"
-                anchors.verticalCenter: parent.verticalCenter
-              }
-
-              Text {
-                text: "0"
-                anchors.verticalCenter: commentButtonIcon.verticalCenter
-                font.pixelSize: 15
-                font.weight: 500
-              }
-            }
-          }
-
-
-          Button {
-            text: "0"
-            width: parent.width*.2
-            height: parent.height
-            icon.width: width * .1
-            icon.height: height * .85
-            background: null
-            contentItem:  Row {
-              spacing: 5
-              anchors.fill: parent
-              Image {
-                id: repostButtonIcon
-                width: parent.width * .5
-                height: parent.height*.7
-                source:  "qrc:/images/Resources/repost-icon.svg"
-                anchors.verticalCenter: parent.verticalCenter
-              }
-
-              Text {
-                text: "0"
-                anchors.verticalCenter: repostButtonIcon.verticalCenter
-                font.pixelSize: 15
-                font.weight: 500
-              }
-            }
-          }
-
-
-          Button {
-            text: "0"
-            width: parent.width*.2
-            height: parent.height
-            icon.width: width * .1
-            icon.height: height * .85
-            background: null
-            contentItem:  Row {
-              spacing: 5
-              anchors.fill: parent
-              Image {
-                id: shareButtonIcon
-                width: parent.width * .5
-                height: parent.height*.7
-                source:  "qrc:/images/Resources/share-icon.svg"
-                anchors.verticalCenter: parent.verticalCenter
-              }
-
-              Text {
-                text: "0"
-                anchors.verticalCenter: shareButtonIcon.verticalCenter
-                font.pixelSize: 15
-                font.weight: 500
-              }
-            }
-          }
-
-
-          Button {
-            text: "0"
-            width: parent.width*.2
-            height: parent.height
-            icon.width: width * .1
-            icon.height: height * .85
-            background: null
-            contentItem:  Row {
-              spacing: 5
-              anchors.fill: parent
-              Image {
-                id: bookmarkButtonIcon
-                width: parent.width * .5
-                height: parent.height*.7
-                source:  "qrc:/images/Resources/bookmark-icon.svg"
-                anchors.verticalCenter: parent.verticalCenter
-              }
-
-              Text {
-                text: "0"
-                anchors.verticalCenter: bookmarkButtonIcon.verticalCenter
-                font.pixelSize: 15
-                font.weight: 500
-              }
-            }
-          }
-
-        }
-
-      }
-
-    }
-    delegate: Column {
-      id: uploadThreadDelegate
-      width: photoThreadListView.width
-      height: mainLayout.height * .3
-      Rectangle {
-        color: "dimgray"
-        width: photoThreadListView.width
-        height: mainLayout.height * .3
-      }
     }
 
-  }
+    ListView {
+        id: threadList
+        width: parent.width
+        anchors.top: toolbar.bottom
+        anchors.bottom: parent.bottom
+        clip: true
+        model: commentModel
+        spacing: 1
 
+        header: Column {
+            width: threadList.width
 
+            Rectangle {
+                width: parent.width
+                height: mainLayout.height * .52
+                color: "#101214"
 
+                Image {
+                    id: uploadImage
+                    anchors.fill: parent
+                    source: photoThreadView.mediaUrl
+                    fillMode: Image.PreserveAspectCrop
+                    asynchronous: true
+                }
+            }
+
+            Rectangle {
+                width: parent.width
+                height: mainLayout.height * .105
+                color: "white"
+
+                Rectangle {
+                    id: creatorAvatar
+                    width: parent.height * .68
+                    height: width
+                    radius: width * .5
+                    anchors.left: parent.left
+                    anchors.leftMargin: 10
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: "#6d5dfc"
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: photoThreadView.openProfileRequested()
+                    }
+                }
+
+                Column {
+                    anchors.left: creatorAvatar.right
+                    anchors.leftMargin: 10
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 3
+
+                    Label {
+                        text: photoThreadView.username + "  " + photoThreadView.timestamp
+                        font.pixelSize: 16
+                        font.weight: Font.DemiBold
+                    }
+
+                    Label {
+                        text: photoThreadView.caption
+                        width: photoThreadView.width - creatorAvatar.width - 35
+                        font.pixelSize: 15
+                        wrapMode: Text.Wrap
+                        elide: Text.ElideRight
+                    }
+                }
+            }
+
+            Rectangle {
+                id: interactionPanel
+                width: parent.width
+                height: mainLayout.height * .07
+                color: "white"
+
+                Row {
+                    anchors.fill: parent
+
+                    Repeater {
+                        model: actionModel
+
+                        Button {
+                            width: interactionPanel.width / actionModel.count
+                            height: interactionPanel.height
+                            background: null
+
+                            contentItem: Row {
+                                anchors.centerIn: parent
+                                spacing: 4
+
+                                Image {
+                                    width: interactionPanel.height * .38
+                                    height: width
+                                    source: model.iconSource
+                                }
+
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    text: index === 0 ? photoThreadView.likeCount
+                                                      : index === 1 ? photoThreadView.commentCount
+                                                                    : model.metric
+                                    font.pixelSize: 14
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                width: parent.width
+                height: 42
+                color: "#f5f6f8"
+
+                Label {
+                    anchors.left: parent.left
+                    anchors.leftMargin: 12
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "Comments"
+                    font.pixelSize: 17
+                    font.weight: Font.DemiBold
+                }
+            }
+        }
+
+        delegate: Rectangle {
+            width: threadList.width
+            height: commentBody.implicitHeight + 42
+            color: index % 2 === 0 ? "white" : "#fafbfc"
+
+            Rectangle {
+                id: commentAvatar
+                width: 32
+                height: width
+                radius: width * .5
+                anchors.left: parent.left
+                anchors.leftMargin: 12
+                anchors.top: parent.top
+                anchors.topMargin: 10
+                color: index % 2 === 0 ? "#2979ff" : "#00a884"
+            }
+
+            Column {
+                anchors.left: commentAvatar.right
+                anchors.right: parent.right
+                anchors.leftMargin: 10
+                anchors.rightMargin: 12
+                anchors.top: commentAvatar.top
+                spacing: 3
+
+                Label {
+                    text: model.author + "  " + model.timestamp
+                    font.weight: Font.DemiBold
+                    color: "#39424e"
+                }
+
+                Label {
+                    id: commentBody
+                    width: parent.width
+                    text: model.body
+                    wrapMode: Text.Wrap
+                    color: "#20242a"
+                }
+            }
+        }
+    }
 }
-

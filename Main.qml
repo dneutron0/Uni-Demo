@@ -25,6 +25,7 @@ ApplicationWindow {
     property bool isLoggedIn: UserManager.currentUser !== null
     property bool loginChecked: UserManager.loginCheckComplete
     property bool chatViewVisible: false
+    property string activeConversationName: "Maya Chen"
     property bool composeViewVisible: false
     property bool creatorDashboardViewVisible: false
 
@@ -100,8 +101,11 @@ ApplicationWindow {
             id: coreTabbar
             width: parent.width
             height: parent.height*.075
-            Material.theme: Material.System
+            // Material.theme: Material.System
             anchors.bottom: parent.bottom
+            background: Rectangle {
+                color: "black"
+            }
 
             TabButton {
                 width: coreTabbar.width*.198
@@ -113,6 +117,7 @@ ApplicationWindow {
                 anchors.verticalCenter: parent.verticalCenter
                 background: null
                 onClicked: selectedCoreTab = 0
+                icon.color: checked ? "palevioletred" : "white"
 
 
             }
@@ -127,6 +132,7 @@ ApplicationWindow {
                 anchors.verticalCenter: parent.verticalCenter
                 background: null
                 onClicked: selectedCoreTab = 1
+                icon.color: checked ? "palevioletred" : "white"
 
             }
 
@@ -139,6 +145,7 @@ ApplicationWindow {
                 icon.height: coreTabbar.height*.50
                 anchors.verticalCenter: parent.verticalCenter
                 background: null
+                icon.color: checked ? "palevioletred" : "white"
                 onClicked: {
                     previousCoreTab = selectedCoreTab
                     composeViewVisible = true
@@ -155,6 +162,7 @@ ApplicationWindow {
                 anchors.verticalCenter: parent.verticalCenter
                 background: null
                 onClicked: selectedCoreTab = 2
+                icon.color: checked ? "palevioletred" : "white"
 
             }
 
@@ -168,6 +176,7 @@ ApplicationWindow {
                 anchors.verticalCenter: parent.verticalCenter
                 background: null
                 onClicked: selectedCoreTab = 3
+                icon.color: checked ? "palevioletred" : "white"
 
 
             }
@@ -182,6 +191,7 @@ ApplicationWindow {
 
         ChatView  {
             anchors.fill: parent
+            peerName: activeConversationName
         }
 
     }

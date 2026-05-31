@@ -5,6 +5,7 @@ import QtQuick.Window 6.9
 Item {
    id: chatView
    anchors.fill: parent
+   property string peerName: "Maya Chen"
 
    Rectangle {
       id: categoryContentViewToolbar
@@ -40,36 +41,37 @@ Item {
       clip: true
       header: Rectangle {
          width: chatView.width
-         height: chatView.height*.25
-         color: "gray"
+         height: chatView.height*.1
+         color: "#f5f6f8"
+
+         Label {
+            text: peerName
+            anchors.centerIn: parent
+            font.pixelSize: 20
+            font.weight: Font.DemiBold
+         }
       }
 
       Component.onCompleted: positionViewAtEnd()
 
 
       model:  ListModel {
+         id: chatModel
+
          ListElement {
-            sender: "You"; message: "Hey! How's the chat view shit coming along? Any issues thus far?"
+            sender: "Friend"; message: "I sent over the biomedical notes from today's lab."
          }
 
          ListElement {
-            sender: "Friend"; message: "Hey, what's up? This is a much longer message that should wrap across multiple lines so we can see the height adjust dynamically."
+            sender: "You"; message: "Got them. The prototype diagrams are much clearer now."
          }
 
          ListElement {
-            sender: "You"; message: "Hey! How's the chat view shit coming along? Any issues thus far?"
+            sender: "Friend"; message: "Good. I added the study guide links too."
          }
 
          ListElement {
-            sender: "Friend"; message: "Hey, what's up? This is a much longer message that should wrap across multiple lines so we can see the height adjust dynamically."
-         }
-
-         ListElement {
-            sender: "You"; message: "Hey! How's the chat view shit coming along? Any issues thus far?"
-         }
-
-         ListElement {
-            sender: "Friend"; message: "Hey, what's up? This is a much longer message that should wrap across multiple lines so we can see the height adjust dynamically."
+            sender: "You"; message: "Perfect. I will review them before class."
          }
       }
 
@@ -161,6 +163,17 @@ Item {
             antialiasing: true
 
             icon.source: "qrc:/images/Resources/paper-plane-icon.svg"
+            onClicked: {
+               var message = chatTextArea.text.trim()
+               if (message.length === 0) {
+                  return
+               }
+
+               chatModel.append({ "sender": "You", "message": message })
+               ConversationManager.sendMessage(peerName, message)
+               chatTextArea.text = ""
+               Qt.callLater(function() { chatListView.positionViewAtEnd() })
+            }
          }
 
 
